@@ -1,6 +1,11 @@
-; Kuinをコマンドプロンプトからコンパイルするツール。
-; Last Modified: 2012/09/01 21:41:35.
-; Maintainer: @tatt61880
+﻿/*
+    kn.ahk v0.02 (for Kuin 0.023)
+        Kuinをコマンドプロンプトからコンパイルするツールです。
+        Last Modified: 2013/04/29 01:00:59.
+        Created by @tatt61880
+            https://twitter.com/tatt61880
+            https://github.com/tatt61880
+*/
 
 ; タイトルの一致を正規表現モードにする。
 SetTitleMatchMode,RegEx
@@ -58,11 +63,11 @@ RegExMatch(KuinText, "(Error.*)", KuinErrorMessage1)
 cliptext := KuinErrorMessage1
 
 KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "(Error: E\d+ )", "$1`n")
-KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "`t", "`n") 
-KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "。", "。`n") 
+KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "`t", "`n")
+KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "。", "。`n")
 
-cliptext := RegExReplace(cliptext, "^Error: (E\d+ )", "$1`t") 
-cliptext := RegExReplace(cliptext, "\[.*?\]$", "") 
+cliptext := RegExReplace(cliptext, "^Error: (E\d+ )", "$1`t")
+cliptext := RegExReplace(cliptext, "\[.*?\]$", "")
 clipboard = %cliptext%
 
 if (KuinErrorMessage1) {
@@ -75,7 +80,15 @@ if (KuinErrorMessage1) {
         {
             exe_filename := RegExReplace(kn_filename, ".kn$", "_dbg.exe")
             exe_fullpath = %A_ScriptDir%\%exe_filename%
-            Run, %exe_fullpath%
+            if (RegExMatch(kn_filename, "\\") = 0) {
+                ; 引数にディレクトリが含まれない場合
+                Run, %exe_fullpath%, %A_ScriptDir%
+            } else {
+                ; 引数にディレクトリが含まれる場合
+                dir := RegExReplace(kn_filename, "\\[^\\]*$", "")
+                ; 作業ディレクトリとして、.knファイルの置いてあるフォルダを指定して実行
+                Run, %exe_fullpath%, %A_ScriptDir%\%dir%
+            }
         }
     }
     Exit, 0
