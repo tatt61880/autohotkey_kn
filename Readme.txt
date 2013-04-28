@@ -1,7 +1,7 @@
 ﻿/*
     kn.exe v0.02 (for Kuin 0.023)
         Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/04/29 01:29:54.
+        Last Modified: 2013/04/29 01:38:16.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
@@ -49,4 +49,9 @@
                .knファイルの置いてある場所で実行します。
     v0.01 (2012/09/01)
         [初公開] Kuin 0.023用です。
+
+【その他】
+    このツールの作成にあたり、「AutoHotkeyを流行らせるページ」の情報にお世話になりました。
+        AutoHotkeyを流行らせるページ
+        http://ahk.xrea.jp/
 
