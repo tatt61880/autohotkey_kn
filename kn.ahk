@@ -1,7 +1,7 @@
 ﻿/*
-    kn.ahk v0.03 (for Kuin 0.023)
+    kn.ahk v0.04 (for Kuin 0.023)
         Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/04/29 23:33:52.
+        Last Modified: 2013/04/30 00:53:32.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
@@ -40,7 +40,7 @@ Sample.knのコンパイルに成功した場合、Sample_dbg.exeを実行する
         exit 1 ; 引数が正しくなかったため、終了
     }
 
-    filename_fullpath = %A_ScriptDir%\%kn_filename%
+    filename_fullpath = %A_WorkingDir%\%kn_filename%
     ControlSetText, WindowsForms10.EDIT.app.0.378734a4, %filename_fullpath%, Kuin, ソースファイル
 }
 
@@ -76,7 +76,7 @@ if (RegExMatch(KuinText, "(Error.*)", KuinErrorMessage1) <> 0) {
     Exit, 1
 } else {
     RegExMatch(KuinText, "(コンパイル時間: .*)", compileTime)
-    compileTime := RegExReplace(compileTime, ": (00:)+0?", ": ")
+    compileTime := RegExReplace(compileTime, ": (00:)*0?", ": ")
     ToolTip %compileTime%
 
     if 0 > 1 ; 引数の個数が2以上
@@ -84,15 +84,15 @@ if (RegExMatch(KuinText, "(Error.*)", KuinErrorMessage1) <> 0) {
         if 2 = run ; 第二引数が "run"
         {
             exe_filename := RegExReplace(kn_filename, ".kn$", "_dbg.exe")
-            exe_fullpath = %A_ScriptDir%\%exe_filename%
+            exe_fullpath = %A_WorkingDir%\%exe_filename%
             if (RegExMatch(kn_filename, "\\") = 0) {
                 ; 引数にディレクトリが含まれない場合
-                Run, %exe_fullpath%, %A_ScriptDir%
+                Run, %exe_fullpath%, %A_WorkingDir%
             } else {
                 ; 引数にディレクトリが含まれる場合
                 dir := RegExReplace(kn_filename, "\\[^\\]*$", "")
                 ; 作業ディレクトリとして、.knファイルの置いてあるフォルダを指定して実行
-                Run, %exe_fullpath%, %A_ScriptDir%\%dir%
+                Run, %exe_fullpath%, %A_WorkingDir%\%dir%
             }
         }
     }
