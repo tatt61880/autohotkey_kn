@@ -1,7 +1,7 @@
 ﻿/*
-    kn.ahk v0.02 (for Kuin 0.023)
+    kn.ahk v0.03 (for Kuin 0.023)
         Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/04/29 01:00:59.
+        Last Modified: 2013/04/29 23:33:52.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
@@ -18,8 +18,7 @@ IfWinNotExist, Kuin, ソースファイル
     Run, Kuin.exe
 }
 
-WinActivate, Kuin, ソースファイル
-WinWaitActive, Kuin, ソースファイル, 0
+WinWait, Kuin, ソースファイル, 3
 WinGet, kuinPID, PID, A ;Kuin.exeのpidを取得。
 
 ; スクリプトに引数有りの場合、ソースファイルを指定
@@ -45,9 +44,11 @@ Sample.knのコンパイルに成功した場合、Sample_dbg.exeを実行する
     ControlSetText, WindowsForms10.EDIT.app.0.378734a4, %filename_fullpath%, Kuin, ソースファイル
 }
 
-ControlClick, コンパイル, Kuin, ソースファイル, LEFT, 1, NA ; [コンパイル(&C)]をクリック
+; [コンパイル(&C)]をクリック
+ControlSend, コンパイル, {SPACE}, Kuin, ソースファイル
 if ErrorLevel > 0
 {
+    msgbox コンパイルエラー？ (@tatt61880)
     exit 1
 }
 
@@ -59,21 +60,25 @@ if(currentPID <> kuinPID){
 
 ; コンパイル結果の解析開始
 WinGetText, KuinText, Kuin, ソースファイル
-RegExMatch(KuinText, "(Error.*)", KuinErrorMessage1)
-cliptext := KuinErrorMessage1
+if (RegExMatch(KuinText, "(Error.*)", KuinErrorMessage1) <> 0) {
+    /*
+    ;エラーをクリップボードに格納（「Kuinのコンパイルエラー一覧(非公式)」を作成する際に活用していました。）
+    cliptext := KuinErrorMessage1
+    cliptext := RegExReplace(cliptext, "^Error: (E\d+ )", "$1`t")
+    cliptext := RegExReplace(cliptext, "\[.*?\]$", "")
+    clipboard = %cliptext%
+    */
 
-KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "(Error: E\d+ )", "$1`n")
-KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "`t", "`n")
-KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "。", "。`n")
-
-cliptext := RegExReplace(cliptext, "^Error: (E\d+ )", "$1`t")
-cliptext := RegExReplace(cliptext, "\[.*?\]$", "")
-clipboard = %cliptext%
-
-if (KuinErrorMessage1) {
+    KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "(Error: E\d+ )", "$1`n")
+    KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "`t", "`n")
+    KuinErrorMessage1 := RegExReplace(KuinErrorMessage1, "。", "。`n")
     msgbox, %KuinErrorMessage1%
     Exit, 1
 } else {
+    RegExMatch(KuinText, "(コンパイル時間: .*)", compileTime)
+    compileTime := RegExReplace(compileTime, ": (00:)+0?", ": ")
+    ToolTip %compileTime%
+
     if 0 > 1 ; 引数の個数が2以上
     {
         if 2 = run ; 第二引数が "run"
@@ -91,6 +96,7 @@ if (KuinErrorMessage1) {
             }
         }
     }
+    Sleep 1000
     Exit, 0
 }
 
