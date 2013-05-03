@@ -1,7 +1,7 @@
 ﻿/*
-    kn.ahk v0.04 (for Kuin 0.023)
+    kn.ahk v0.041 (for Kuin 0.023)
         Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/04/30 00:53:32.
+        Last Modified: 2013/05/04 07:18:34.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
@@ -44,11 +44,24 @@ Sample.knのコンパイルに成功した場合、Sample_dbg.exeを実行する
     ControlSetText, WindowsForms10.EDIT.app.0.378734a4, %filename_fullpath%, Kuin, ソースファイル
 }
 
+exe_filename := RegExReplace(kn_filename, ".kn$", "_dbg.exe")
+exe_fullpath = %A_WorkingDir%\%exe_filename%
+
+; 念のため、古いファイルは削除しておく。
+if 0 > 1 ; 引数の個数が2以上
+{
+    if 2 = run ; 第二引数が "run"
+    {
+        FileDelete, %exe_fullpath%
+    }
+}
+
 ; [コンパイル(&C)]をクリック
 ControlSend, コンパイル, {SPACE}, Kuin, ソースファイル
+Sleep 50
 if ErrorLevel > 0
 {
-    msgbox コンパイルエラー？ (@tatt61880)
+    msgbox コンパイルエラー？ kn.ahkの影響かもしれないので@tatt61880に問合わせてください。
     exit 1
 }
 
@@ -83,8 +96,8 @@ if (RegExMatch(KuinText, "(Error.*)", KuinErrorMessage1) <> 0) {
     {
         if 2 = run ; 第二引数が "run"
         {
-            exe_filename := RegExReplace(kn_filename, ".kn$", "_dbg.exe")
-            exe_fullpath = %A_WorkingDir%\%exe_filename%
+            ;exe_filename := RegExReplace(kn_filename, ".kn$", "_dbg.exe")
+            ;exe_fullpath = %A_WorkingDir%\%exe_filename%
             if (RegExMatch(kn_filename, "\\") = 0) {
                 ; 引数にディレクトリが含まれない場合
                 Run, %exe_fullpath%, %A_WorkingDir%
