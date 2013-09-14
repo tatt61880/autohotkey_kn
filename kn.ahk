@@ -1,7 +1,7 @@
 ﻿/*
-    kn.ahk v0.041 (for Kuin 0.023)
+    kn.ahk v0.98 (for Kuin 0.98)
         Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/05/04 07:18:34.
+        Last Modified: 2013/09/14 21:49:36.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
@@ -41,7 +41,7 @@ Sample.knのコンパイルに成功した場合、Sample_dbg.exeを実行する
     }
 
     filename_fullpath = %A_WorkingDir%\%kn_filename%
-    ControlSetText, WindowsForms10.EDIT.app.0.378734a4, %filename_fullpath%, Kuin, ソースファイル
+    ControlSetText, WindowsForms10.EDIT.app.0.378734a3, %filename_fullpath%, Kuin, ソースファイル
 }
 
 exe_filename := RegExReplace(kn_filename, ".kn$", "_dbg.exe")
@@ -56,8 +56,17 @@ if 0 > 1 ; 引数の個数が2以上
     }
 }
 
-; [コンパイル(&C)]をクリック
-ControlSend, コンパイル, {SPACE}, Kuin, ソースファイル
+if 0 > 1 ; 引数の個数が2以上
+{
+    if 2 = run ; 第二引数が "run"
+    {
+        ; [コンパイル＆実行]をクリック
+        ControlSend, コンパイル, {SPACE}, Kuin, ソースファイル
+    }
+} else {
+    ; [文法チェック]をクリック
+    ControlSend, 文法チェック, {SPACE}, Kuin, ソースファイル
+}
 Sleep 50
 if ErrorLevel > 0
 {
@@ -88,27 +97,10 @@ if (RegExMatch(KuinText, "(Error.*)", KuinErrorMessage1) <> 0) {
     msgbox, %KuinErrorMessage1%
     Exit, 1
 } else {
-    RegExMatch(KuinText, "(コンパイル時間: .*)", compileTime)
+    RegExMatch(KuinText, "意味解析完了: .*", compileTime)
     compileTime := RegExReplace(compileTime, ": (00:)*0?", ": ")
     ToolTip %compileTime%
 
-    if 0 > 1 ; 引数の個数が2以上
-    {
-        if 2 = run ; 第二引数が "run"
-        {
-            ;exe_filename := RegExReplace(kn_filename, ".kn$", "_dbg.exe")
-            ;exe_fullpath = %A_WorkingDir%\%exe_filename%
-            if (RegExMatch(kn_filename, "\\") = 0) {
-                ; 引数にディレクトリが含まれない場合
-                Run, %exe_fullpath%, %A_WorkingDir%
-            } else {
-                ; 引数にディレクトリが含まれる場合
-                dir := RegExReplace(kn_filename, "\\[^\\]*$", "")
-                ; 作業ディレクトリとして、.knファイルの置いてあるフォルダを指定して実行
-                Run, %exe_fullpath%, %A_WorkingDir%\%dir%
-            }
-        }
-    }
     Sleep 1000
     Exit, 0
 }
