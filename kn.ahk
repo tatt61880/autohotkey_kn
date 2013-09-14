@@ -1,7 +1,7 @@
 ﻿/*
-    kn.ahk v0.98 (for Kuin 0.98)
+    kn.ahk v0.981 (for Kuin 0.98)
         Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/09/14 21:49:36.
+        Last Modified: 2013/09/14 22:46:04.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
@@ -35,12 +35,18 @@ if 0 > 0 ; 引数の個数が1以上
 Sample.knをコンパイル。
 
 例2: kn.exe Sample.kn run
-Sample.knのコンパイルに成功した場合、Sample_dbg.exeを実行する。
+Sample.knのコンパイルに成功した場合、作成されたexeを実行する。
 )
         exit 1 ; 引数が正しくなかったため、終了
     }
 
-    filename_fullpath = %A_WorkingDir%\%kn_filename%
+    IfInString, kn_filename, :
+    {
+        ; 引数にコロン(:)が含まれるため、フルパスが渡されていると仮定する。
+        filename_fullpath = %kn_filename%
+    } else {
+        filename_fullpath = %A_WorkingDir%\%kn_filename%
+    }
     ControlSetText, WindowsForms10.EDIT.app.0.378734a3, %filename_fullpath%, Kuin, ソースファイル
 }
 
