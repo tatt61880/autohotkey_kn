@@ -1,7 +1,7 @@
 ﻿/*
-    kn.ahk v0.981 (for Kuin 0.98)
+    kn.ahk v0.982 (for Kuin 0.98)
         Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/09/14 22:46:04.
+        Last Modified: 2013/09/15 08:14:46.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
@@ -40,8 +40,7 @@ Sample.knのコンパイルに成功した場合、作成されたexeを実行�
         exit 1 ; 引数が正しくなかったため、終了
     }
 
-    IfInString, kn_filename, :
-    {
+    if (RegExMatch(kn_filename, "(^[\\])|:")) {
         ; 引数にコロン(:)が含まれるため、フルパスが渡されていると仮定する。
         filename_fullpath = %kn_filename%
     } else {
