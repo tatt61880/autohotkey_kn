@@ -1,14 +1,14 @@
 ﻿/*
     kn.exe v0.982 (for Kuin 0.98)
-        Kuinをコマンドプロンプトからコンパイルするツールです。
-        Last Modified: 2013/09/15 08:16:43.
+        Kuinのコンパイラをコマンドプロンプトから操作するツールです。
+        Last Modified: 2013/09/16 01:23:48.
         Created by @tatt61880
             https://twitter.com/tatt61880
             https://github.com/tatt61880
 */
 
 【概要】
-    kn.exeは、コマンドプロンプトからKuin.exeの[コンパイル]ボタンのクリックを発生させるツールです。
+    kn.exeは、コマンドプロンプトからKuin.exeの[コンパイル＆実行]または[文法チェック]ボタンのクリックを発生させるツールです。
     ※Kuin.exeはくいなちゃん(@kuina_tesso)が作成した、Kuinの処理系です。
 
     AutoHotkeyを持っていない人のために、バイナリ(kn.exe)を公開しています。
@@ -23,13 +23,11 @@
        kn.exe [sourcefile.kn [run]]
        sourcefile.knは、kn.exeの置いてあるフォルダからの相対パスで入力してください。
         例1: kn.exe
-            Kuin.exeのソースファイル欄が空欄だろうがなんだろうが、とにかくコンパイル。
+            Kuin.exeのソースファイル欄が空欄だろうがなんだろうが、とにかく[文法チェック]を行います。
         例2: kn.exe dir\test.kn
-            dirフォルダのtest.knをコンパイル。
+            dirフォルダのtest.knをソースファイル欄に入力し、[文法チェック]
         例3: kn.exe dir\test.kn run
-            dirフォルダのtest.knのコンパイル。
-                →コンパイルに成功した場合: test_dbg.exeを実行する。
-                ※この時の作業フォルダはdirフォルダです。
+            dirフォルダのtest.knをソースファイル欄に入力し、[コンパイル＆実行]
 
 【不具合を発見された場合】
     @tatt61880にご連絡頂けると幸いです。
